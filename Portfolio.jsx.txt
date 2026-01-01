@@ -1,0 +1,124 @@
+import { ReactLenis } from "lenis/react";
+import { useScroll, motion } from "framer-motion";
+import { useRef } from "react";
+import AnimatedCard from "../animation/AnimatedCard";
+import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+
+const projects = [
+     {
+    title: "CloudSnap",
+    description:
+      "A comprehensive digital PR platform with advanced analytics and campaign management tools.",
+    img: "/images/digipr.png",
+    color: "#5196fd",
+    technologies: ["React.js", "Node.js", "PostgreSQL", "AWS"],
+    btnColor: [
+      {
+        from: "#f97316",
+        to: "#facc15",
+        hoverFrom: "#fb923c",
+        hoverTo: "#fef08a",
+      },
+    ],
+  },
+  {
+    title: "Limon Developers",
+    description:
+      "Modern real estate platform with virtual property tours and booking system.",
+    img: "/images/limon_developers.png",
+    color: "#8f89ff",
+    technologies: ["React.js", "Tailwind CSS"],
+    btnColor: [
+      {
+        from: "#10b981",
+        to: "#06b6d4",
+        hoverFrom: "#059669",
+        hoverTo: "#22d3ee",
+      },
+    ],
+  },
+  ];
+
+
+export default function PortfolioSection() {
+  const container = useRef(null);
+  const navigate = useNavigate();
+
+
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start start", "end end"],
+  });
+
+
+  return (
+    <ReactLenis root>
+      <main ref={container}>
+        {/*     CARD STACK       */}
+        <section className="text-white w-full bg-white mt-30">
+          {/*    Portfolio Header   */}
+          <div className="text-center relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8 }}
+              className="inline-block px-4 py-2 rounded-full glass mb-6"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+               Our <span className=" bg-gradient-to-r from-[#667eea] to-[#a855f7] bg-clip-text text-transparent">Portfolio</span>
+              </h2>
+            </motion.div>
+
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
+            >
+              A showcase of impactful digital experiences crafted with precision,
+              performance, and creativity.
+            </motion.p>
+          </div>
+          {projects.map((project, i) => {
+            const targetScale = 1 - (projects.length - i) * 0.05;
+            return (
+              <AnimatedCard
+                key={i}
+                i={i}
+                url={project.img}
+                title={project.title}
+                color={project.color}
+                description={project.description}
+                technologies={project.technologies}
+                btnColor={project.btnColor}
+                progress={scrollYProgress}
+                range={[i * 0.25, 1]}
+                targetScale={targetScale}
+              />
+            );
+          })}
+        </section>
+
+
+        {/* View More Projects */}
+        <div className="pt-0 pb-3 text-center">
+          <button
+            onClick={() => navigate("/portfolio")}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#667eea] to-[#a855f7] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+          >
+            More Projects
+            <ArrowRight size={20} />
+          </button>
+        </div>
+      </main>
+    </ReactLenis>
+  );
+}
+
+
+
